@@ -1029,3 +1029,28 @@
 
   window.addEventListener('resize', debounce(() => { if (previewZoomMode === 'fit'){ refreshPreviewSizing(); drawPreviewFrame(); } }, 150));
 })();
+
+// ---------- theme toggle (light / dark) ----------
+(function(){
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggleBtn');
+  const toggleLabel = document.getElementById('themeToggleLabel');
+  const STORAGE_KEY = 'spriteEditorTheme';
+
+  function applyTheme(theme){
+    root.setAttribute('data-theme', theme);
+    if (toggleLabel) toggleLabel.textContent = theme;
+    if (toggleBtn) toggleBtn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+    try{ localStorage.setItem(STORAGE_KEY, theme); }catch(e){}
+  }
+
+  // sync UI with whatever the early inline <head> script already set
+  applyTheme(root.getAttribute('data-theme') || 'dark');
+
+  if (toggleBtn){
+    toggleBtn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+    });
+  }
+})();
